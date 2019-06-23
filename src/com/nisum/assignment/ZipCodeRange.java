@@ -1,5 +1,6 @@
+package com.nisum.assignment;
 
-public class NisumPojo {
+public class ZipCodeRange {
 
 	private String lowerLimit;
 	private String upperLimit;

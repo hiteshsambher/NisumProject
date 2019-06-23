@@ -1,27 +1,42 @@
+package com.nisum.assignment;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
-public class NisumProject {
 
-	public static void main(String[] args) {
-		//		System.out.println("Enter ranges , comma separted");
-		//		Scanner scan = new Scanner(System.in);
-		//		String str= scan.nextLine();
-		String str= "[5,20] [1,2] [4,15]";
+public class ZipCodeExtracter {
+	
+	
+	
+
+	public static void main(String[] args) throws Exception {
+		String str= "[11115,11120] [11111,11112] [11114,11115]";
+		List<ZipCodeRange> outputList = mergeZipCodeRange(str);
+		System.out.println(outputList.toString());
+
+	}
+
+	public static List<ZipCodeRange> mergeZipCodeRange(String str) throws Exception {
 		String[] strArray =str.split(" ");
-		List<NisumPojo> list= new ArrayList<NisumPojo>();
-		List<NisumPojo> outputList = new ArrayList<NisumPojo>();
-		NisumPojo pojo;
-		int l1=0 , l2=0 ,u1=0 ,u2=0 ,templ=0 ,tempu=0;
+		List<ZipCodeRange> list= new ArrayList<ZipCodeRange>();
+		List<ZipCodeRange> outputList = new ArrayList<ZipCodeRange>();
+		ZipCodeRange pojo;
+		int l2=0 ,u2=0 ,templ=0 ,tempu=0;
 		for(int i=0;i<strArray.length;i++)
 		{
 			String[] limits= strArray[i].replace("[", "").replace("]", "").split(",");
-			pojo= new NisumPojo();
-			pojo.setLowerLimit(limits[0]);
-			pojo.setUpperLimit(limits[1]);
-			list.add(pojo);
+			pojo= new ZipCodeRange();
+			String l1 = limits[0];
+			String u1 = limits[1];
+			Pattern p = Pattern.compile("\\d+");
+			if(l1.length()==5 && u1.length()==5 && p.matcher(l1).matches() && p.matcher(u1).matches()) {
+				pojo.setLowerLimit(l1);
+				pojo.setUpperLimit(u1);
+				list.add(pojo);
+			}else {
+				throw new Exception("Zip code should be of length 5 and should be number");
+			}
+			
 		}
 		boolean flag=false;
 		for(int i=0;i<list.size();i++)
@@ -58,14 +73,13 @@ public class NisumProject {
 			}
 			if(flag)
 			{
-				pojo=new NisumPojo();
+				pojo=new ZipCodeRange();
 				pojo.setLowerLimit(String.valueOf(templ));
 				pojo.setUpperLimit(String.valueOf(tempu));
 				outputList.add(pojo);
 			}
 		}
-		System.out.println(outputList.toString());
-
+		return outputList;
 	}
 
 }
